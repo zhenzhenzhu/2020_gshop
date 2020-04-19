@@ -15,6 +15,15 @@ import Order from '../pages/Order/Order.vue'
 import Profile from '../pages/Profile/Profile.vue'
 // 引入登陆
 import Login from '../pages/Login/Login.vue'
+// 引入商品页
+import Shop from '../pages/Shop/Shop.vue'
+// 引入点餐页
+import ShopGoods from '../pages/Shop/ShopGoods/ShopGoods.vue'
+// 引入评价
+import ShopRatings from '../pages/Shop/ShopRatings/ShopRatings.vue'
+// 引入商家
+import ShopInfo from '../pages/Shop/ShopInfo/ShopInfo.vue'
+
 
 
 // 声明使用插件
@@ -58,6 +67,28 @@ export default new vueRouter({
         {
             path:'/login',
             component:Login
+        },
+        {
+          path:'/shop',
+          component: Shop,
+          children: [
+            {
+              path:'/shop/goods',
+              component: ShopGoods
+            },
+            {
+              path:'/shop/ratings',
+              component: ShopRatings
+            },
+            {
+              path:'/shop/info',
+              component: ShopInfo
+            },
+            {
+               path:'',
+               redirect:'/shop/goods'
+            },
+          ]
         }
     ]
 })

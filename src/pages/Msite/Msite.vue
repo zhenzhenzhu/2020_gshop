@@ -2,28 +2,30 @@
 <template>
     <section class="msite">
         <!--首页头部-->
-        <HeaderTop title="上海市浦东新区">
+        <HeaderTop :title="address.name">
           <!-- 头部搜索框 -->
-          <span class="header_search" slot="left">
+          <router-link class="header_search" slot="left" to="/search">
               <i class="iconfont icon-sousuo"></i>
-          </span>
+          </router-link>
            <!-- 头部登陆注册部分 -->
-          <span class="header_login" slot="right">
-            <span class="header_login_text">登录|注册</span>
-          </span>
+          <router-link class="header_login" slot="right" :to="userInfo._id ? '/userInfo' :'/login'">
+            <span class="header_login_text" v-if="!userInfo._id">登录|注册</span>
+            <span class="header_login_text" v-else><i class="iconfont icon-person"></i></span>
+          </router-link>
         </HeaderTop>
         <!--首页导航-->
         <nav class="msite_nav">
-          <div class="swiper-container">
+          <div class="swiper-container" v-if="categorys.length>0">
             <div class="swiper-wrapper">
-              <div class="swiper-slide">
-                <a href="javascript:" class="link_to_food">
+              <div class="swiper-slide" v-for="(categorys,index) in categorysArr" :key = 'index'>
+                <a href="javascript:" class="link_to_food" v-for="(category,index) in categorys" :key = 'index'>
                   <div class="food_container">
-                    <img src="./images/nav/1.jpg">
+                    <!-- :src 动态强制绑定 -->
+                    <img :src="baseImageUrl+category.image_url">
                   </div>
-                  <span>甜品饮品</span>
+                  <span>{{category.title}}</span>
                 </a>
-                <a href="javascript:" class="link_to_food">
+                <!-- <a href="javascript:" class="link_to_food">
                   <div class="food_container">
                     <img src="./images/nav/2.jpg">
                   </div>
@@ -64,9 +66,9 @@
                     <img src="./images/nav/8.jpg">
                   </div>
                   <span>土豪推荐</span>
-                </a>
+                </a> -->
               </div>
-              <div class="swiper-slide">
+              <!-- <div class="swiper-slide">
                 <a href="javascript:" class="link_to_food">
                   <div class="food_container">
                     <img src="./images/nav/9.jpg">
@@ -115,12 +117,14 @@
                   </div>
                   <span>土豪推荐</span>
                 </a>
-              </div>
+              </div> -->
             </div>
             <!-- 如果需要分页器 -->
             <div class="swiper-pagination"></div>
           </div>
+          <img src="./images/msite_back.svg" alt="back" v-else>
         </nav>
+
         <!--首页附近商家-->
         <div class="msite_shop_list">
           <div class="shop_header">
@@ -313,6 +317,8 @@
 </template>
 <script>
 /* eslint-disable */
+  // 引入vuex中辅助函数/映射函数 mapState
+  import {mapState} from 'vuex'
   // 引入swiper插件 js
   import Swiper from 'swiper'
   // 引入swiper css部分 可以在HTML引入，也可以在此引入
@@ -322,9 +328,29 @@
   // 引入商家部分
   import ShopList from '../../components/ShopList/ShopList.vue'
 export default {
+  data(){
+    return{
+      baseImageUrl:'https://fuss10.elemecdn.com'
+    }
+  },
   // swiper 轮播图
   mounted(){ // 渲染dom之后调用，此时页面已经显示了
-    // 创建一个 swiper实例渲染轮播图
+
+   this.$store.dispatch('getAddress'),
+   
+    // 触发actions调用 指定action名称getCategorys
+    this.$store.dispatch('getCategorys'),
+
+    // 发请求 获取getShops商家列表
+    this.$store.dispatch('getShops')
+
+   
+  },
+  // 监听categorys 的变化
+  watch:{
+    categorys(value){ // 有值说明categorys发生变化了
+    this.$nextTick(() => {
+       // 创建一个 swiper实例渲染轮播图
     /**
      * 参数1：容器
      * 参数2：配置对象
@@ -337,6 +363,47 @@ export default {
       el: '.swiper-pagination',
     }
     })
+    })
+
+    }
+  },
+  // 计算属性
+  computed:{
+    ...mapState(['address','categorys','userInfo']),
+    
+    /**
+     * 根据categorys一维数组生成一个二维数组
+     * 小数组最大长度为8
+     */
+    categorysArr(){
+      // 取出以为数组
+      const {categorys} = this
+      
+
+      // 准备一个空的二维数组
+      const arr = []
+      // 准备一个小数组
+      let minArr =[]
+
+      // 遍历categorys
+      categorys.forEach(item =>{
+       
+        // 判断-当小数组的长度为8 的时候，给它一个新的数组
+       if (minArr.length === 8) {
+         minArr =[]
+       }
+        //判断-当小数组为空的数组，把它添加到大数组（二维数组）里面
+        if (minArr.length === 0){
+          arr.push(minArr)
+        }
+        // 把当前分类保存到小数组
+        minArr.push(item)
+      })
+
+      return arr
+
+
+    }
   },
   components:{
     HeaderTop,

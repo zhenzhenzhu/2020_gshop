@@ -23,6 +23,7 @@ export default {
     // 组件要接收一个属性title，首先要声明
     props:{
         title:String 
+        
     }
 
 }
