@@ -20,6 +20,9 @@
 <script>
 import ShopHeader from '../../components/ShopHeader/ShopHeader.vue'
 export default {
+  mounted () {
+    this.$store.dispatch('getShopInfo')
+  },
   //  映射成标签
   components: {
     ShopHeader
