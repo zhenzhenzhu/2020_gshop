@@ -9,7 +9,6 @@ import App from './app.vue'
 import router from './router'
 // 引入vuex
 import store from './store'
-
 // 引入mockserver
 import './mock/mockServer'
 
