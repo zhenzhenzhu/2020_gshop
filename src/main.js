@@ -10,6 +10,9 @@ import router from './router'
 // 引入vuex
 import store from './store'
 
+// 引入mockserver
+import './mock/mockServer'
+
 // 注册全局组件
 Vue.component(Button.name, Button)
 
