@@ -1,8 +1,16 @@
-
 /*
 基于state的计算属性
 包含多个基于state的getter计算属性
 */
+/* eslint-disable */
 export default {
-
+  totalCount(state) {
+    return state.cartFoods.reduce((preTotal, food) => preTotal + food.count, 0)
+  },
+  totalPrice(state) {
+    return state.cartFoods.reduce((preTotal, food) => preTotal + food.count * food.price, 0)
+  },
+  positiveSize(state) {
+    return state.ratings.reduce((preTotal, rating) => preTotal + (rating.rateType === 0 ? 1 : 2), 0)
+  }
 }

@@ -1,11 +1,17 @@
 <template>
-  <div>shopinfo</div>
+  <div>shopInfo</div>
 </template>
 <script>
-export default {}
+/* eslint-disable */
+export default {
+}
 </script>
 <style lang="stylus" ref = "stylesheet/stylus">
 
-// @import '../../common/stylus/mixins.styl'
+
+
+ // @import '../../common/stylus/mixins.styl'
+
+
 
 </style>
